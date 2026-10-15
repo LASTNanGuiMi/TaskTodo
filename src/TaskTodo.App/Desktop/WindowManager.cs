@@ -9,6 +9,7 @@ using TaskTodo.App.Views;
 using TaskTodo.Core.Interaction;
 using TaskTodo.Core.Models;
 using TaskTodo.Core.Services;
+using static TaskTodo.App.Desktop.NativeMethods;
 
 namespace TaskTodo.App.Desktop;
 
@@ -438,8 +439,4 @@ internal sealed class WindowManager : IDisposable
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool UnhookWinEvent(IntPtr hook);
-
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetWindowPos(IntPtr window, IntPtr after, int x, int y, int width, int height, uint flags);
 }

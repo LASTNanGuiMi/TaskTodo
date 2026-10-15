@@ -24,6 +24,13 @@ public sealed class SettingsOpacityRuleTests
         Assert.Equal(TaskTodoErrorCode.Validation, error.Code);
     }
 
+    [Theory]
+    [InlineData(SurfaceMaterial.Solid, 1.0)]
+    [InlineData(SurfaceMaterial.Glass, 0.4)]
+    [InlineData(SurfaceMaterial.Clear, 0.4)]
+    public void Surface_opacity_applies_the_setting_only_to_see_through_materials(SurfaceMaterial material, double expected)
+        => Assert.Equal(expected, (SettingsSnapshot.Default with { BackgroundOpacity = 0.4, Material = material }).GetSurfaceOpacity());
+
     [Fact]
     public void Rejects_an_undefined_collapse_style()
     {

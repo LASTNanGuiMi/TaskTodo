@@ -1,4 +1,3 @@
-using Microsoft.Data.Sqlite;
 using TaskTodo.App.State;
 using TaskTodo.App.ViewModels;
 using TaskTodo.Core.Interaction;

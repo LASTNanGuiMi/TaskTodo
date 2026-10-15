@@ -41,7 +41,7 @@ public sealed class PreviewViewModel : ObservableObject, IDisposable
     public bool IsEmpty => Rows.Count == 0;
     public string PendingSummary => $"{Rows.Count(row => !row.IsCompleted)} 项待完成";
     public SurfaceMaterial Material => _store.Snapshot.Settings.Material;
-    public double SurfaceOpacity => Material == SurfaceMaterial.Solid ? 1.0 : _store.Snapshot.Settings.BackgroundOpacity;
+    public double SurfaceOpacity => _store.Snapshot.Settings.GetSurfaceOpacity();
     public bool IsAlwaysOnTop => _store.Snapshot.Settings.IsAlwaysOnTop;
     public bool CanInteract => !IsSaving;
     public bool HasError => ErrorMessage is not null;

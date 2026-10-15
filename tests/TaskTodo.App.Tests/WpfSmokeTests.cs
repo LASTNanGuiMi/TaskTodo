@@ -228,7 +228,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(saved.MonitorId, restored.MonitorId);
             Assert.InRange(Math.Abs(saved.Bounds.Left - restored.Bounds.Left), 0, 2);
             Assert.InRange(Math.Abs(saved.Bounds.Top - restored.Bounds.Top), 0, 2);
-            monitors.PlaceDockAtRightEdge(dock, main);
+            monitors.PlaceDock(dock, main, DockSide.Right, 0.2, 1);
             dock.Show();
             await Dispatcher.Yield(DispatcherPriority.ApplicationIdle);
             SaveImage(dock, "capsule.png");

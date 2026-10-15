@@ -162,12 +162,10 @@ public sealed class MainWindowViewModel : ObservableObject, IDisposable
 
     public const double GlassDefaultOpacity = 0.6;
     public const double ClearDefaultOpacity = 0.45;
-    public const double TranslucentMaximumOpacity = 0.95;
 
     public bool IsTranslucent => _settings.Material != SurfaceMaterial.Solid;
 
-    // What the panels actually paint: the opacity setting only applies to the see-through materials.
-    public double SurfaceOpacity => IsTranslucent ? _settings.BackgroundOpacity : 1.0;
+    public double SurfaceOpacity => _settings.GetSurfaceOpacity();
 
     public void RememberDock(DockSide side, double offset)
         => ChangeSettings(_settings with { DockSide = side, DockOffset = offset });

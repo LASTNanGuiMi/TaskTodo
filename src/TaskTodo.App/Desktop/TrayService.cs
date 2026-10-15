@@ -1,6 +1,3 @@
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace TaskTodo.App.Desktop;
 
 internal sealed class TrayService : IDisposable

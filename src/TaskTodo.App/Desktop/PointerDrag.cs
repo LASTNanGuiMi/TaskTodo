@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Media;
+using static TaskTodo.App.Desktop.NativeMethods;
 
 namespace TaskTodo.App.Desktop;
 
@@ -65,19 +66,9 @@ internal sealed class PointerDrag
         Finished?.Invoke(this, dragged);
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    private struct NativePoint { public int X, Y; }
-
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetCursorPos(out NativePoint point);
-
     [DllImport("user32.dll")]
     private static extern short GetAsyncKeyState(int key);
 
     [DllImport("user32.dll")]
     private static extern int GetSystemMetrics(int index);
-
-    [DllImport("user32.dll")]
-    private static extern uint GetDpiForWindow(IntPtr window);
 }

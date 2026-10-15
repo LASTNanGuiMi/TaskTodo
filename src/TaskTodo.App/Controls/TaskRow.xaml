@@ -24,28 +24,6 @@
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="24"/>
             </Grid.ColumnDefinitions>
-            <Border x:Name="DragHandle" Grid.Column="2" Background="Transparent" Cursor="SizeAll"
-                    PreviewMouseLeftButtonDown="Handle_OnMouseDown"
-                    PreviewMouseLeftButtonUp="Handle_OnMouseUp"
-                    PreviewMouseMove="Handle_OnMouseMove" ToolTip="拖动排序">
-                <TextBlock Text="&#xE784;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
-                           VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,4,0,0"/>
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Opacity" Value="0"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"><Setter Property="Opacity" Value="1"/></DataTrigger>
-                            <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"><Setter Property="Opacity" Value="1"/></DataTrigger>
-                            <DataTrigger Binding="{Binding IsCompleted}" Value="True">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsEditing}" Value="True">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
             <local:TaskCheckBox Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="1,1,0,0"
                       IsChecked="{Binding IsCompleted, Mode=OneWay}" CompletionRequested="Completion_OnRequested"
                       IsEnabled="{Binding DataContext.CanInteract, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -78,25 +56,48 @@
                        LostKeyboardFocus="Editor_OnLostFocus" CompositionFinished="Editor_OnCompositionFinished"
                        IsVisibleChanged="Editor_OnVisibleChanged" AutomationProperties.Name="编辑任务标题"/>
             </Grid>
-            <Button Grid.Column="3" Content="&#xE712;" FontFamily="Segoe Fluent Icons" FontSize="12" ToolTip="任务操作" AutomationProperties.Name="任务操作"
-                    Width="24" Height="22" VerticalAlignment="Top" Margin="0,-1,0,0" Click="Menu_OnClick"
-                    IsEnabled="{Binding DataContext.CanInteract, RelativeSource={RelativeSource AncestorType=Window}}">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource WindowActionButtonStyle}">
+            <!-- Row actions only appear while the row is hovered or holds keyboard focus. -->
+            <Grid Grid.Column="2" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="16"/><ColumnDefinition Width="24"/></Grid.ColumnDefinitions>
+                <Grid.Style>
+                    <Style TargetType="Grid">
                         <Setter Property="Opacity" Value="0"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"><Setter Property="Opacity" Value="1"/></DataTrigger>
                             <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"><Setter Property="Opacity" Value="1"/></DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </Button.Style>
-                <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="编辑" Click="Edit_OnClick"/>
-                        <MenuItem Header="删除" Click="Delete_OnClick"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
+                </Grid.Style>
+                <Border x:Name="DragHandle" Background="Transparent" Cursor="SizeAll"
+                        PreviewMouseLeftButtonDown="Handle_OnMouseDown"
+                        PreviewMouseLeftButtonUp="Handle_OnMouseUp"
+                        PreviewMouseMove="Handle_OnMouseMove" ToolTip="拖动排序">
+                    <TextBlock Text="&#xE784;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
+                               VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Button Grid.Column="1" Content="&#xE712;" FontFamily="Segoe Fluent Icons" FontSize="12" ToolTip="任务操作" AutomationProperties.Name="任务操作"
+                        Width="24" Height="22" VerticalAlignment="Top" Margin="0,-1,0,0" Click="Menu_OnClick" Style="{StaticResource WindowActionButtonStyle}"
+                        IsEnabled="{Binding DataContext.CanInteract, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="编辑" Click="Edit_OnClick"/>
+                            <MenuItem Header="删除" Click="Delete_OnClick"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

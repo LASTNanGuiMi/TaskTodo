@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Interop;
 using TaskTodo.Core.Interaction;
 using TaskTodo.Core.Models;
+using static TaskTodo.App.Desktop.NativeMethods;
 
 namespace TaskTodo.App.Desktop;
 
@@ -96,10 +97,6 @@ internal sealed class MonitorService : IDisposable
             : EdgePlacement.Dock(LocalWorkArea(info, scale), 128, 16 + 38 * listCount, side, offset);
         PlaceLocal(dockWindow, local, info, scale);
     }
-
-    // Kept for the initial single-capsule smoke test.
-    public void PlaceDockAtRightEdge(Window dockWindow, Window anchorWindow)
-        => PlaceDock(dockWindow, anchorWindow, DockSide.Right, 0.2, 1);
 
     public void PlacePreview(Window preview, Window dock, DockSide side, double height, double anchorTop)
     {
@@ -198,22 +195,11 @@ internal sealed class MonitorService : IDisposable
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GetWindowRect(IntPtr window, out NativeRect rect);
-    [DllImport("user32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetCursorPos(out NativePoint point);
-    [DllImport("user32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool SetWindowPos(IntPtr window, IntPtr after, int x, int y, int width, int height, uint flags);
-    [DllImport("user32.dll")]
-    private static extern uint GetDpiForWindow(IntPtr window);
     [DllImport("shcore.dll")]
     private static extern int GetDpiForMonitor(IntPtr monitor, int type, out uint x, out uint y);
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr clip, MonitorCallback callback, IntPtr data);
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct NativePoint { public int X, Y; }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct NativeRect

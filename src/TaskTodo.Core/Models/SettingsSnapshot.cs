@@ -58,6 +58,10 @@ public sealed record SettingsSnapshot(
     // Glass blurs the desktop behind the panel, Clear shows it unblurred; both use BackgroundOpacity. Solid is opaque.
     public SurfaceMaterial Material { get; init; } = SurfaceMaterial.Solid;
 
+    // What the panels actually paint: the opacity setting only applies to the see-through materials.
+    // A method rather than a property so it never ends up in the stored settings JSON.
+    public double GetSurfaceOpacity() => Material == SurfaceMaterial.Solid ? 1.0 : BackgroundOpacity;
+
     public static SettingsSnapshot Default { get; } = new(
         BackgroundOpacity: 0.88,
         IsAlwaysOnTop: true,
