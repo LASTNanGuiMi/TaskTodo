@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="Microsoft.Data.Sqlite"/>
+    <PackageReference Include="xunit"/>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Using Include="Xunit"/>
+    <Using Include="System.IO"/>
+    <ProjectReference Include="../../src/TaskTodo.App/TaskTodo.App.csproj"/>
+    <Compile Include="../TaskTodo.Infrastructure.Tests/Support/TemporaryTaskTodoStorage.cs" Link="Support/TemporaryTaskTodoStorage.cs"/>
+  </ItemGroup>
+</Project>

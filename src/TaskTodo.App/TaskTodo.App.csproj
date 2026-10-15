@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>TaskTodo</AssemblyName>
+    <RootNamespace>TaskTodo.App</RootNamespace>
+    <ApplicationIcon>Assets\TaskTodo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\TaskTodo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskTodo.Core\TaskTodo.Core.csproj" />
+    <ProjectReference Include="..\TaskTodo.Infrastructure\TaskTodo.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

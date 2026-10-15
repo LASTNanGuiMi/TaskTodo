@@ -1,0 +1,134 @@
+<desktop:PassiveWindow x:Class="TaskTodo.App.Views.DockRailWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:desktop="clr-namespace:TaskTodo.App.Desktop"
+    Style="{StaticResource AppWindowStyle}" Title="TaskTodo 胶囊" Width="128" Height="56" WindowStyle="None" AllowsTransparency="True"
+    Background="Transparent" ResizeMode="NoResize" ShowActivated="False" ShowInTaskbar="False"
+    Topmost="{Binding IsAlwaysOnTop}" UseLayoutRounding="True" SnapsToDevicePixels="True"
+    ContextMenuOpening="ContextMenu_OnOpening" ContextMenuClosing="ContextMenu_OnClosing">
+    <desktop:PassiveWindow.ContextMenu>
+        <ContextMenu>
+            <MenuItem x:Name="OrbStyleItem" Header="切换为图标球" Click="Orb_OnStyleClick"/>
+            <MenuItem x:Name="CapsuleStyleItem" Header="切换为胶囊条" Click="Capsule_OnStyleClick"/>
+            <Separator/>
+            <MenuItem Header="停靠左侧" Click="Left_OnClick"/>
+            <MenuItem Header="停靠右侧" Click="Right_OnClick"/>
+            <Separator/>
+            <MenuItem Header="隐藏到托盘" Click="Hide_OnClick"/>
+        </ContextMenu>
+    </desktop:PassiveWindow.ContextMenu>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="16"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <Thumb Visibility="{Binding IsOrbStyle, Converter={StaticResource InvertedBool}}" Cursor="SizeAll" PreviewMouseLeftButtonDown="Grip_OnPreviewDown"
+               ToolTip="沿边拖动位置；拖到另一侧切换停靠" AutomationProperties.Name="移动胶囊栏">
+            <Thumb.Template>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="Transparent">
+                        <UniformGrid x:Name="Grip" Rows="2" Columns="3" Width="18" Height="8" Opacity="0.55">
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                            <Ellipse Width="2" Height="2" Fill="{DynamicResource TextTertiaryBrush}"/>
+                        </UniformGrid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Grip" Property="Opacity" Value="1"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+        <ScrollViewer Visibility="{Binding IsOrbStyle, Converter={StaticResource InvertedBool}}" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      Focusable="False" CanContentScroll="False">
+            <ItemsControl ItemsSource="{Binding Lists}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Height="32" Margin="0,0,0,6" BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1" Cursor="Hand" Focusable="False" Click="OpenButton_OnClick"
+                                MouseEnter="Capsule_OnMouseEnter" MouseMove="Capsule_OnMouseMove"
+                                AutomationProperties.AutomationId="{Binding Id, StringFormat=OpenList_{0}}"
+                                AutomationProperties.Name="{Binding Name}">
+                            <Button.Background>
+                                <SolidColorBrush Color="{DynamicResource SurfaceColor}"
+                                    Opacity="{Binding DataContext.SurfaceOpacity, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            </Button.Background>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid>
+                                        <Border x:Name="CapsuleShell" Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="16"/>
+                                        <Border x:Name="StateTint" Background="Transparent" Margin="1" CornerRadius="15"/>
+                                        <Border x:Name="SelectionMark" Width="2" Height="10" CornerRadius="1" Margin="6,0,0,0"
+                                                HorizontalAlignment="Left" VerticalAlignment="Center" Background="{DynamicResource AccentBrush}"
+                                                Visibility="Collapsed"/>
+                                        <Grid Margin="13,0,7,0">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="ListTitle" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12" Text="{Binding Name}" TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                            <Border x:Name="CountBadge" Grid.Column="1" MinWidth="20" MaxWidth="42" Height="20" Padding="5,0"
+                                                    CornerRadius="10" Background="{DynamicResource ControlSurfaceBrush}" VerticalAlignment="Center">
+                                                <TextBlock x:Name="CountLabel" Text="{Binding PendingCount}" FontSize="10.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <Setter TargetName="SelectionMark" Property="Visibility" Value="Visible"/>
+                                            <Setter TargetName="CountBadge" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                                            <Setter TargetName="CountLabel" Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+                                            <Setter TargetName="ListTitle" Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="StateTint" Property="Background" Value="{DynamicResource ControlHoverBrush}"/>
+                                            <Setter TargetName="CapsuleShell" Property="BorderBrush" Value="{DynamicResource TextTertiaryBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="StateTint" Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+                                            <Setter TargetName="CapsuleShell" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button x:Name="OrbButton" Grid.RowSpan="2" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Cursor="Hand" Focusable="False" Visibility="{Binding IsOrbStyle, Converter={StaticResource BoolToVisibility}}"
+                Click="Orb_OnClick" MouseEnter="Orb_OnMouseEnter" MouseMove="Orb_OnMouseMove"
+                PreviewMouseLeftButtonDown="Orb_OnPreviewDown"
+                ToolTip="点击展开；拖动调整位置" AutomationProperties.AutomationId="OpenOrb" AutomationProperties.Name="TaskTodo 图标球">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="OrbRoot" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                        <Ellipse Width="44" Height="44" Fill="{DynamicResource AccentBrush}">
+                            <Ellipse.Effect><DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.28" Color="#000000"/></Ellipse.Effect>
+                        </Ellipse>
+                        <Ellipse Width="44" Height="44" Stroke="{DynamicResource GlassEdgeBrush}" StrokeThickness="1.2"/>
+                        <Path Data="M 0,8 L 6.5,14.5 L 20,0" Stroke="{DynamicResource AccentForegroundBrush}" StrokeThickness="2.4"
+                              Width="20" Height="14.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="Badge" MinWidth="18" Height="18" Padding="5,0" CornerRadius="9" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,2,2,0" Background="{DynamicResource PopupSurfaceBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1.2">
+                            <TextBlock Text="{Binding PendingCount}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding PendingCount}" Value="0"><Setter TargetName="Badge" Property="Visibility" Value="Collapsed"/></DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="OrbRoot" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="1.07" ScaleY="1.07"/></Setter.Value></Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="OrbRoot" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="0.95" ScaleY="0.95"/></Setter.Value></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</desktop:PassiveWindow>

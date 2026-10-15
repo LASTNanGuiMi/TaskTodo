@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+artifacts/
+
+# IDE and user settings
+.vs/
+.idea/
+*.user
+*.suo
+
+# Test output
+TestResults/
+
+# Local TaskTodo data must never be committed
+*.db
+*.db-shm
+*.db-wal
+Backups/
+Logs/

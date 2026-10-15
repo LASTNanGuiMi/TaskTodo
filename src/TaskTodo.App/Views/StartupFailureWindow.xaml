@@ -1,0 +1,55 @@
+<Window x:Class="TaskTodo.App.Views.StartupFailureWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TaskTodo — 无法打开数据" Width="520" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI" UseLayoutRounding="True">
+    <Window.Background><SolidColorBrush Color="{DynamicResource SurfaceColor}"/></Window.Background>
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource DialogButtonStyle}"/>
+    </Window.Resources>
+    <StackPanel Margin="28,28,28,24">
+        <Border Width="42" Height="42" CornerRadius="13" Background="{DynamicResource ErrorSurfaceBrush}"
+                HorizontalAlignment="Left" Margin="0,0,0,18">
+            <Path Data="M 10,2 L 19,18 1,18 Z M 10,7 L 10,12 M 10,14 L 10,15"
+                  Stroke="{DynamicResource TextPrimaryBrush}" StrokeThickness="1.5"
+                  Width="21" Height="20" Stretch="Uniform"/>
+        </Border>
+        <TextBlock Text="暂时无法打开任务" FontSize="23" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" FontSize="13" LineHeight="21" Margin="0,10,0,20"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        <Border Padding="16,14" CornerRadius="12" Background="{DynamicResource PopupSurfaceBrush}"
+                BorderBrush="{DynamicResource SubtleBorderBrush}" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="数据位置" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,0,0,7"/>
+                <TextBlock Text="{Binding DirectoryPath}" TextWrapping="Wrap" FontSize="12" LineHeight="19"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Text="你可以重试，或选择已有备份恢复。恢复前会保留当前数据文件。"
+                   TextWrapping="Wrap" FontSize="12" LineHeight="20" Margin="0,18,0,0"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <TextBlock x:Name="RecoveryStatus" TextWrapping="Wrap" FontSize="12" LineHeight="20" Margin="0,10,0,0"
+                   Foreground="{DynamicResource TextPrimaryBrush}" AutomationProperties.LiveSetting="Polite"
+                   AutomationProperties.AutomationId="RecoveryStatus"/>
+
+        <StackPanel x:Name="Actions" Margin="0,22,0,0">
+            <Button Content="选择备份恢复…" Click="RestoreBackup_OnClick"
+                    Style="{StaticResource PrimaryButtonStyle}" Padding="16,10" HorizontalAlignment="Stretch"
+                    AutomationProperties.AutomationId="RestoreStartupBackup"/>
+            <Border Height="1" Background="{DynamicResource SubtleBorderBrush}" Margin="0,20,0,16"/>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="重试" Padding="16,8" Margin="0,0,8,0" IsDefault="True" Click="Retry_OnClick"/>
+                    <Button Content="退出" Padding="16,8" IsCancel="True"/>
+                </StackPanel>
+                <Button Content="打开数据目录" Padding="10,8" HorizontalAlignment="Left" Click="OpenDirectory_OnClick"
+                        Background="Transparent" Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </DockPanel>
+        </StackPanel>
+    </StackPanel>
+</Window>
